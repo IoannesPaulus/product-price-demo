@@ -18,8 +18,13 @@ function findById(id) {
   return Product.findById(id);
 }
 
+function updateById(id, newData) {
+  return Product.findOneAndUpdate({ _id: id }, newData, { new: true });
+}
+
 module.exports = {
   create,
   findAll,
-  findById
+  findById,
+  updateById
 };

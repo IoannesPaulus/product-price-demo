@@ -22,4 +22,16 @@ router.get('/products/:id', celebrate({
   }
 }), productsController.getById);
 
+router.put('/products/:id', celebrate({
+  params: {
+    id: Joi.objectId()
+  },
+  body: Joi.object().keys({
+    description: Joi.string(),
+    cost: Joi.number().min(0),
+    price: Joi.number().min(0),
+    stock: Joi.number().integer().min(0)
+  })
+}), productsController.updateById);
+
 module.exports = router;

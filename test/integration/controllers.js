@@ -65,4 +65,39 @@ describe('Products controller', () => {
   it('should return an error not found if the product with this id isn\'t found', () => request(app)
     .get('/api/products/56e6dd2eb4494ed008d595bd')
     .expect(404));
+
+  it('should update product with specified id', () => request(app)
+    .put(`/api/products/${_id}`)
+    .send({
+      cost: 5.1
+    })
+    .expect(200)
+    .then((data) => {
+      assert.equal(data.body.cost, 5.1);
+    }));
+
+  it('should return an error bad request if the update id isn\'t a mongoose object id', () => request(app)
+    .put('/api/products/1')
+    .expect(400));
+
+  it('should return an error bad request if the there is nothing to update', () => request(app)
+    .put(`/api/products/${_id}`)
+    .send({
+    })
+    .expect(400));
+
+  it('should return an error bad request if the there are unknown parameters', () => request(app)
+    .put(`/api/products/${_id}`)
+    .send({
+      cost: 5.1,
+      wat: 3
+    })
+    .expect(400));
+
+  it('should return an error not found if the product to update with this id isn\'t found', () => request(app)
+    .put('/api/products/56e6dd2eb4494ed008d595bd')
+    .send({
+      cost: 5.1
+    })
+    .expect(404));
 });
