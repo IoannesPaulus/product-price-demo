@@ -65,9 +65,23 @@ function updateById(req, res, next) {
     .catch(next);
 }
 
+function deleteById(req, res, next) {
+  return productService.removeById(req.params.id)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      if (err.message === 'not found') {
+        return next(new ErrorWithStatus(`Id not found: ${req.params.id}`, 404));
+      }
+      return next(err);
+    });
+}
+
 module.exports = {
   create,
   listAll,
   getById,
-  updateById
+  updateById,
+  deleteById
 };

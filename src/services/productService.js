@@ -22,9 +22,20 @@ function updateById(id, newData) {
   return Product.findOneAndUpdate({ _id: id }, newData, { new: true });
 }
 
+function removeById(id) {
+  return Product.remove({ _id: id })
+    .then((data) => {
+      if (data.n === 0) {
+        throw new Error('not found');
+      }
+      return { success: data.ok };
+    });
+}
+
 module.exports = {
   create,
   findAll,
   findById,
-  updateById
+  updateById,
+  removeById
 };

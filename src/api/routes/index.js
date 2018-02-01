@@ -34,4 +34,10 @@ router.put('/products/:id', celebrate({
   })
 }), productsController.updateById);
 
+router.delete('/products/:id', celebrate({
+  params: {
+    id: Joi.objectId()
+  }
+}), productsController.deleteById);
+
 module.exports = router;

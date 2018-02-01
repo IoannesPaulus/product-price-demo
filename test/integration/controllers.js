@@ -100,4 +100,19 @@ describe('Products controller', () => {
       cost: 5.1
     })
     .expect(404));
+
+  it('should delete product with specified id', () => request(app)
+    .delete(`/api/products/${_id}`)
+    .expect(200)
+    .then((data) => {
+      assert.equal(data.body.success, 1);
+    }));
+
+  it('should return an error bad request if the id to delete isn\'t a mongoose object id', () => request(app)
+    .delete('/api/products/1')
+    .expect(400));
+
+  it('should return an error not found if the product to delete isn\'t found', () => request(app)
+    .delete('/api/products/56e6dd2eb4494ed008d595bd')
+    .expect(404));
 });
