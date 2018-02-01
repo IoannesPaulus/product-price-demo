@@ -55,6 +55,13 @@ const conf = convict({
       default: '',
       env: 'MONGO_PASSWORD'
     }
+  },
+  currencyConverter: {
+    doc: 'The currency converter url.',
+    format: String,
+    default: 'https://api.fixer.io/latest',
+    env: 'CC',
+    arg: 'cc'
   }
 });
 

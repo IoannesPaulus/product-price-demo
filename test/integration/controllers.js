@@ -56,6 +56,7 @@ describe('Products controller', () => {
     .expect(200)
     .then((data) => {
       assert.equal(data.body.cost, 4.5);
+      assert.equal(data.body.price, 5.3);
     }));
 
   it('should return an error bad request if the id isn\'t a mongoose object id', () => request(app)
@@ -65,6 +66,30 @@ describe('Products controller', () => {
   it('should return an error not found if the product with this id isn\'t found', () => request(app)
     .get('/api/products/56e6dd2eb4494ed008d595bd')
     .expect(404));
+
+  it('should get the USD price of a product with the specified id', () => request(app)
+    .get(`/api/products/${_id}/price`)
+    .expect(200)
+    .then((data) => {
+      assert.equal(data.body.price, 5.3);
+      assert.isUndefined(data.body.cost);
+    }));
+
+  it('should get the HUF price of a product with the specified id', () => request(app)
+    .get(`/api/products/${_id}/price?currency=HUF`)
+    .expect(200)
+    .then((data) => {
+      assert.notEqual(data.body.price, 5.3);
+      assert.isUndefined(data.body.cost);
+    }));
+
+  it('should return an error bad request if currency is invalid', () => request(app)
+    .get(`/api/products/${_id}/price?currency=HUG`)
+    .expect(400));
+
+  it('should return an error bad request if currency is in the wrong format', () => request(app)
+    .get(`/api/products/${_id}/price?currency=huf`)
+    .expect(400));
 
   it('should update product with specified id', () => request(app)
     .put(`/api/products/${_id}`)

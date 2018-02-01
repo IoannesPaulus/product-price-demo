@@ -78,10 +78,30 @@ function deleteById(req, res, next) {
     });
 }
 
+function getPrice(req, res, next) {
+  return productService.getPrice(req.params.id, req.query.currency)
+    .then((data) => {
+      if (data === null) {
+        next(new ErrorWithStatus(`Product with this id does not exist: ${req.params.id}`, 404));
+      } else {
+        res.json(data);
+      }
+    })
+    .catch((err) => {
+      if (err.message === 'invalid currency') {
+        return next(new ErrorWithStatus(`Invalid currency: ${req.query.currency}`, 400));
+      } else if (err.message.startsWith('Conversion:')) {
+        return next(new ErrorWithStatus(err.message, 400));
+      }
+      return next(err);
+    });
+}
+
 module.exports = {
   create,
   listAll,
   getById,
   updateById,
-  deleteById
+  deleteById,
+  getPrice
 };

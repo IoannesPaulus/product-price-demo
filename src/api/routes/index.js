@@ -40,4 +40,13 @@ router.delete('/products/:id', celebrate({
   }
 }), productsController.deleteById);
 
+router.get('/products/:id/price', celebrate({
+  params: {
+    id: Joi.objectId()
+  },
+  query: {
+    currency: Joi.string().regex(/^[A-Z]{3}$/)
+  }
+}), productsController.getPrice);
+
 module.exports = router;
