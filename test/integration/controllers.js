@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../../app');
 
 let _desc = 'integration_test_' + Math.floor(Date.now() / 1000) + '_desc';
+let _desc2 = `${_desc}2`;
 let _id = null;
 
 describe('Products controller', () => {
@@ -23,6 +24,23 @@ describe('Products controller', () => {
       assert.equal(data.body.stock, 3);
       assert.equal(data.body.id, data.body._id);
       _id = data.body.id;
+    }));
+
+  it('should create a second product', () => request(app)
+    .post('/api/products')
+    .send({
+      description: _desc2,
+      cost: 5.5,
+      price: 7.0,
+      stock: 4
+    })
+    .expect(200)
+    .then((data) => {
+      assert.equal(data.body.description, _desc2);
+      assert.equal(data.body.cost, 5.5);
+      assert.equal(data.body.price, 7.0);
+      assert.equal(data.body.stock, 4);
+      assert.equal(data.body.id, data.body._id);
     }));
 
   it('should return an error conflict if a product with this description already exists', () => request(app)
@@ -49,6 +67,7 @@ describe('Products controller', () => {
     .expect(200)
     .then((data) => {
       assert(Array.isArray(data.body));
+      assert.isAtLeast(data.body.length, 2);
     }));
 
   it('should get product with specified id', () => request(app)
@@ -98,6 +117,14 @@ describe('Products controller', () => {
     .then((data) => {
       assert.equal(data.body.totalCost, 13.5);
       assert.equal(data.body.totalPrice, 15.899999999999999);
+    }));
+
+  it('should get total cost and price for the entire stock', () => request(app)
+    .get('/api/sumStock')
+    .expect(200)
+    .then((data) => {
+      assert.isAtLeast(data.body.totalCost, 79.5);
+      assert.isAtLeast(data.body.totalPrice, 99.9);
     }));
 
   it('should update product with specified id', () => request(app)

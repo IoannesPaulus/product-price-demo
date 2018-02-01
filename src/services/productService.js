@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const _ = require('lodash');
+const { ObjectId } = require('mongoose').Types;
 
 const Product = require('../db/models/product');
 const config = require('../config');
@@ -78,18 +79,47 @@ function getPrice(id, currency) {
 }
 
 function getTotalPriceAndCost(id) {
-  return Product.findById(id)
-    .then((product) => {
-      if (product === null) {
-        return null;
+  return Product.aggregate([
+    {
+      $match: {
+        _id: ObjectId(id)
       }
+    },
+    {
+      $project: {
+        _id: 1,
+        description: 1,
+        totalCost: { $multiply: ['$cost', '$stock'] },
+        totalPrice: { $multiply: ['$price', '$stock'] }
+      }
+    }
+  ]).then((matches) => {
+    if (matches.length === 0) {
+      return null;
+    }
+    return matches[0];
+  });
+}
+
+function getSumTotalPriceAndCost() {
+  return Product.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalCost: { $sum: { $multiply: ['$cost', '$stock'] } },
+        totalPrice: { $sum: { $multiply: ['$price', '$stock'] } }
+      }
+    }
+  ]).then((sum) => {
+    if (sum.length === 0) {
       return {
-        _id: product._id,
-        description: product.description,
-        totalCost: product.cost * product.stock,
-        totalPrice: product.price * product.stock
+        _id: null,
+        totalCost: 0,
+        totalPrice: 0
       };
-    });
+    }
+    return sum[0];
+  });
 }
 
 module.exports = {
@@ -99,5 +129,6 @@ module.exports = {
   updateById,
   removeById,
   getPrice,
-  getTotalPriceAndCost
+  getTotalPriceAndCost,
+  getSumTotalPriceAndCost
 };

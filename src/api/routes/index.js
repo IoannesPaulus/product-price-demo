@@ -55,4 +55,6 @@ router.get('/products/:id/total', celebrate({
   }
 }), productsController.getTotalPriceAndCost);
 
+router.get('/sumStock', productsController.getSumTotalPriceAndCost);
+
 module.exports = router;

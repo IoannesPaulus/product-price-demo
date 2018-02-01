@@ -109,6 +109,14 @@ function getTotalPriceAndCost(req, res, next) {
     .catch(next);
 }
 
+function getSumTotalPriceAndCost(req, res, next) {
+  return productService.getSumTotalPriceAndCost()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch(next);
+}
+
 module.exports = {
   create,
   listAll,
@@ -116,5 +124,6 @@ module.exports = {
   updateById,
   deleteById,
   getPrice,
-  getTotalPriceAndCost
+  getTotalPriceAndCost,
+  getSumTotalPriceAndCost
 };
