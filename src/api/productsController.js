@@ -14,6 +14,28 @@ function create(req, res, next) {
     });
 }
 
+function listAll(req, res, next) {
+  return productService.findAll()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch(next);
+}
+
+function getById(req, res, next) {
+  return productService.findById(req.params.id)
+    .then((data) => {
+      if (data === null) {
+        next(new ErrorWithStatus(`Product with this id does not exist: ${req.params.id}`, 404));
+      } else {
+        res.json(data);
+      }
+    })
+    .catch(next);
+}
+
 module.exports = {
-  create
+  create,
+  listAll,
+  getById
 };
