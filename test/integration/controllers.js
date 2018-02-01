@@ -81,6 +81,7 @@ describe('Products controller', () => {
     .then((data) => {
       assert.notEqual(data.body.price, 5.3);
       assert.isUndefined(data.body.cost);
+      assert.equal(data.body.currency, 'HUF');
     }));
 
   it('should return an error bad request if currency is invalid', () => request(app)

@@ -50,7 +50,7 @@ function json(response) {
 }
 
 function getPrice(id, currency) {
-  if (!currency) {
+  if (!currency || currency === 'USD') {
     return Product.findById(id).select('price');
   }
   return fetch(`${config.get('currencyConverter')}?base=USD&symbols=${currency}`)
@@ -71,7 +71,8 @@ function getPrice(id, currency) {
       return {
         _id: product._id,
         price,
-        id: product.id
+        id: product.id,
+        currency
       };
     });
 }
