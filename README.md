@@ -49,6 +49,8 @@ GET http://localhost:3000/api/products/5a70f4c887906848c6a62a45/price
 ```
 GET http://localhost:3000/api/products/5a70f4c887906848c6a62a45/price?currency=HUF
 ```
+Description for the used currency conversion API:
+http://fixer.io/
 #### Total price and cost for entire stock of any given product
 ```
 GET http://localhost:3000/api/products/5a70f4c887906848c6a62a45/total
