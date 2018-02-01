@@ -97,11 +97,24 @@ function getPrice(req, res, next) {
     });
 }
 
+function getTotalPriceAndCost(req, res, next) {
+  return productService.getTotalPriceAndCost(req.params.id)
+    .then((data) => {
+      if (data === null) {
+        next(new ErrorWithStatus(`Product with this id does not exist: ${req.params.id}`, 404));
+      } else {
+        res.json(data);
+      }
+    })
+    .catch(next);
+}
+
 module.exports = {
   create,
   listAll,
   getById,
   updateById,
   deleteById,
-  getPrice
+  getPrice,
+  getTotalPriceAndCost
 };

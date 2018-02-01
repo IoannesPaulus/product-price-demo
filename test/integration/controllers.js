@@ -92,6 +92,14 @@ describe('Products controller', () => {
     .get(`/api/products/${_id}/price?currency=huf`)
     .expect(400));
 
+  it('should get total cost and price for stock of product with specified id', () => request(app)
+    .get(`/api/products/${_id}/total`)
+    .expect(200)
+    .then((data) => {
+      assert.equal(data.body.totalCost, 13.5);
+      assert.equal(data.body.totalPrice, 15.899999999999999);
+    }));
+
   it('should update product with specified id', () => request(app)
     .put(`/api/products/${_id}`)
     .send({

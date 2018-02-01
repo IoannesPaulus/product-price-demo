@@ -77,11 +77,27 @@ function getPrice(id, currency) {
     });
 }
 
+function getTotalPriceAndCost(id) {
+  return Product.findById(id)
+    .then((product) => {
+      if (product === null) {
+        return null;
+      }
+      return {
+        _id: product._id,
+        description: product.description,
+        totalCost: product.cost * product.stock,
+        totalPrice: product.price * product.stock
+      };
+    });
+}
+
 module.exports = {
   create,
   findAll,
   findById,
   updateById,
   removeById,
-  getPrice
+  getPrice,
+  getTotalPriceAndCost
 };

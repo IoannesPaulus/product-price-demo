@@ -49,4 +49,10 @@ router.get('/products/:id/price', celebrate({
   }
 }), productsController.getPrice);
 
+router.get('/products/:id/total', celebrate({
+  params: {
+    id: Joi.objectId()
+  }
+}), productsController.getTotalPriceAndCost);
+
 module.exports = router;
